@@ -1,0 +1,17 @@
+{
+  "name": "lee/working-status-notification",
+  "description": "Sending working status notification via SMTP server",
+  "homepage": "https://github.com/peter279k/working-status-notification",
+  "license": "MIT",
+  "authors": [
+    { "name": "peter279k", "email": "peter279k@gmail.com" }
+  ],
+  "require": {
+    "php": ">=7.2",
+    "lee/work-home-schedule": "^1",
+    "mailjet/mailjet-apiv3-php": "^1.4"
+  },
+  "autoload": {
+    "files": [ "notifier.php" ]
+  }
+}
