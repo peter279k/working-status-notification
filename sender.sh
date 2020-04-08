@@ -8,3 +8,5 @@ export FILE_PATH=''
 export WORKING_STATUS='office'
 export START_DATE='2020-04-06'
 export TIMEZONE='Asia/Taipei'
+
+php sender.php
