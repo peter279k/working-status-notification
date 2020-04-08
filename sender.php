@@ -35,7 +35,7 @@ $workingHomeSchedule->startDateStatus = $workingStatus;
 $workingHomeSchedule->csvPath = $filePath;
 $workingHomeSchedule->csvHead = true;
 
-$workingDate = getTomorrowWorkingDate($timezone, $startDate, $workHomeSchedule);
+$workingDate = getTomorrowWorkingDate($timezone, $startDate, $workingHomeSchedule);
 
 $workingStatus = $workingDate['status'];
 $workingDateString = (string)$workingDate['date'];
