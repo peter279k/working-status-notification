@@ -40,7 +40,7 @@ $workingDate = getTomorrowWorkingDate($timezone, $startDate, $workingHomeSchedul
 $workingStatus = $workingDate['status'];
 $workingDateString = (string)$workingDate['date'];
 
-$mailContents = sprintf('<h3>Tomorrow is %s and working status is %s</h3>', $workingDateString, $workingStatus);
+$mailContents = sprintf('<h3>Tomorrow is "%s" and working status is "%s".</h3>', $workingDateString, $workingStatus);
 
 $senderEmailAddress = getenv('SENDER_EMAIL');
 $receivedEmailAddress = getenv('RECEIVED_EMAIL');
@@ -53,4 +53,4 @@ if ($receivedEmailAddress === false) {
     die('RECEIVED_EMAIL environment variable is not set');
 }
 
-sendNotificationMail($mailContents, $senderEmailAddress, $receivedEmailAddress);
+echo sendNotificationMail($mailContents, $senderEmailAddress, $receivedEmailAddress), PHP_EOL;

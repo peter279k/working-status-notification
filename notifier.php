@@ -67,8 +67,8 @@ function sendNotificationMail(string $mailContents, string $senderEmail, string 
     $response = $mailJet->post(Resources::$Email, ['body' => $body]);
 
     if ($response->success() === true) {
-        return $response->getData();
+        return 'Email sent :)' . PHP_EOL;
     }
 
-    return 'e-mail sending is failed';
+    return 'Status code: ' . $response->getStatus() . PHP_EOL . 'Reason phrase: ' . $response->getReasonPhrase();
 }
