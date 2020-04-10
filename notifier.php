@@ -6,10 +6,28 @@ use Mailjet\Resources;
 use Mailjet\Client;
 
 function getTomorrowWorkingDate(string $timezone, string $startDate, WorkHomeSchedule $workHomeSchedule) {
-    $days = Carbon::now($timezone)->addDay()->diffInDays(Carbon::parse($startDate, $timezone));
-    $workHomeSchedule->workingDays = $days;
-
+    $startDateCarbon = Carbon::parse($startDate, $timezone);
+    $days = Carbon::now($timezone)->addDay()->diffInDays($startDateCarbon);
     $workHomeSchedule = $workHomeSchedule->loadCalendarData();
+    $calendars = $workHomeSchedule->calendars;
+
+    $dayRange = range(1, $days);
+    foreach ($dayRange as $value) {
+        $startDateString = $startDateCarbon->format($workHomeSchedule->dateFormat);
+        foreach ($calendars as $calendar) {
+            $dateString = $calendar['date']->format($workHomeSchedule->dateFormat);
+            if ($dateString === $startDateString) {
+                if ($calendar['is_holiday'] === '1') {
+                    $days -= 1;
+                }
+
+                $startDateCarbon->addDay();
+                break;
+            }
+        }
+    }
+
+    $workHomeSchedule->workingDays = $days;
 
     Carbon::mixin($workHomeSchedule);
     $currentDate = Carbon::create($startDate);
