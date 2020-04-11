@@ -36,10 +36,11 @@ $logFilePath = './mail_log.txt';
 if (file_exists($logFilePath) === true) {
     $contents = file_get_contents($logFilePath);
     $contents = str_replace(PHP_EOL, '', $contents);
+    $mailLogDateString = explode(' ', $contents)[0];
 
-    $nowDateString = (string)Carbon::now($timezone);
+    $nowDateString = (string)Carbon::now($timezone)->format('Y-m-d');
 
-    if ($contents === $nowDateString) {
+    if ($mailLogDateString === $nowDateString) {
         exit('Today mail has been sent');
     }
 }
