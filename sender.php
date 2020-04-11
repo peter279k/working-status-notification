@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Lee\WorkHomeSchedule;
 
 $autoloadFilePath = __DIR__ . '/vendor/autoload.php';
@@ -30,6 +31,19 @@ if ($startDate === false) {
     die('START_DATE environment variable is not set');
 }
 
+$logFilePath = './mail_log.txt';
+
+if (file_exists($logFilePath) === true) {
+    $contents = file_get_contents($logFilePath);
+    $contents = str_replace(PHP_EOL, '', $contents);
+
+    $nowDateString = (string)Carbon::now($timezone);
+
+    if ($contents === $nowDateString) {
+        exit('Today mail has been sent');
+    }
+}
+
 $workingHomeSchedule = new WorkHomeSchedule();
 $workingHomeSchedule->startDateStatus = $workingStatus;
 $workingHomeSchedule->csvPath = $filePath;
@@ -40,7 +54,7 @@ $workingDate = getTomorrowWorkingDate($timezone, $startDate, $workingHomeSchedul
 $workingStatus = $workingDate['status'];
 $workingDateString = (string)$workingDate['date'];
 
-$mailContents = sprintf('<h3>Tomorrow is "%s" and working status is "%s".</h3>', $workingDateString, $workingStatus);
+$mailContents = sprintf('<h3>The next working date is "%s" and working status is "%s".</h3>', $workingDateString, $workingStatus);
 
 $senderEmailAddress = getenv('SENDER_EMAIL');
 $receivedEmailAddress = getenv('RECEIVED_EMAIL');
@@ -53,4 +67,9 @@ if ($receivedEmailAddress === false) {
     die('RECEIVED_EMAIL environment variable is not set');
 }
 
-echo sendNotificationMail($mailContents, $senderEmailAddress, $receivedEmailAddress), PHP_EOL;
+$sendResultMessage = sendNotificationMail($mailContents, $senderEmailAddress, $receivedEmailAddress);
+$sendResultMessage = str_replace(PHP_EOL, '', $sendResultMessage);
+
+if ($sendResultMessage === 'Email sent :)') {
+    file_put_contents($logFilePath, (string)Carbon::now($timezone));
+}
